@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+
+<body>
+    <h1>Vlan generator</h1>
+    <form action="/" method="post">
+        How many vlans:
+        <input id="numberVlans" name="numberVlans" type="text">
+        <input type="submit" value="Generate" onclick="initialize()">
+    </form>
+    <p>
+        <%= error %>
+    </p>
+    <form action="/generate" method="post">
+        <% for (let i=0 ; vlanConfig.length> i ; i++ ){ %>
+            <p>
+                <%=vlanConfig[i].vlanNumber %>: <input placeholder="Name" name="ola" type="text">
+                    <input placeholder="switch port mode" type="text">
+            </p>
+            <% } %>
+                <input type="submit" value="Generate Text">
+    </form>
+</body>
+
+<script>
+    /*
+    let initialize = () => {
+        let output = document.getElementById("output");
+        output.textContent = '';
+        let numVlans = document.getElementById("numberVlans").value;
+        if (numVlans > 30) {
+            alert("The max number of VLANS is 30");
+        } else {
+            for (let index = 0; index < numVlans; index++) {
+                let text = document.createElement("input");
+                output.appendChild(text);
+            }
+
+        }
+    }
+*/
+</script>
+
+</html>
