@@ -8,6 +8,7 @@ app.use(express.static("public"));
 
 let vlanConfig = [];
 let error = [];
+var vlan = [];
 
 app.get("/", (req, res) => {
   res.render("vlan", {
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
   });
 });
 
+//Primeiro cria o numero de vlans pedido
 app.post("/", (req, res) => {
   vlanConfig = [];
   error = [];
@@ -25,15 +27,11 @@ app.post("/", (req, res) => {
     error.push(errorMessage);
     res.redirect("/");
   } else {
-  
-    let i = 0;
-    for( let i = 0; numVlan > i ; i++) {
-      let vlan = {
-        vlanNumber: i,
-        config:[{
-          name:"",
-          switchPortMode:""
-        }]
+    for (let i = 0; numVlan > i; i++) {
+      vlan = {
+        vlanNumber: i + 1,
+        name: "",
+        interfaceConfig: [],
       };
       vlanConfig.push(vlan);
     }
@@ -43,8 +41,30 @@ app.post("/", (req, res) => {
   }
 });
 
+//Quando clicado no botao adiciona uma interface
 app.post("/generate", (req, res) => {
-  console.log(req.body.ola);
+  let vlanName = req.body.vlanName;
+  console.log(vlanName);
+
+  let addinterface = req.body.addInterface;
+  console.log("input = " + addinterface);
+
+
+  if (addinterface != undefined) {
+    var interf = {
+      interfaceName: "Teste",
+      switchPortMode: "access",
+    };
+    vlanConfig[addinterface - 1].interfaceConfig.push(interf);
+  }
+
+  for (var i = 0; i < vlanConfig.length; i++) {
+    vlanConfig[i].name = vlanName[i];
+   
+  }
+
+  console.log(vlanConfig);
+  res.redirect("/");
 });
 
 app.listen(process.env.PORT || 3000, () => {

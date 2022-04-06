@@ -14,16 +14,17 @@
     <form action="/" method="post">
         How many vlans:
         <input id="numberVlans" name="numberVlans" type="text">
-        <input type="submit" value="Generate" onclick="initialize()">
+        <input type="submit" value="Generate" >
     </form>
     <p>
         <%= error %>
     </p>
-    <form action="/generate" method="post">
+    <form action="/generate" method="post" >
         <% for (let i=0 ; vlanConfig.length> i ; i++ ){ %>
             <p>
-                <%=vlanConfig[i].vlanNumber %>: <input placeholder="Name" name="ola" type="text">
-                    <input placeholder="switch port mode" type="text">
+                <%=vlanConfig[i].vlanNumber %>: <input value    ="<%=vlanConfig[i].name %>" name="vlanName" type="text"   >
+                <label>Interface</label>
+                    <button name="addInterface" value="<%=vlanConfig[i].vlanNumber %>" onclick="addInterface()" type="submit">+</button> 
             </p>
             <% } %>
                 <input type="submit" value="Generate Text">
@@ -31,22 +32,19 @@
 </body>
 
 <script>
-    /*
-    let initialize = () => {
-        let output = document.getElementById("output");
-        output.textContent = '';
-        let numVlans = document.getElementById("numberVlans").value;
-        if (numVlans > 30) {
-            alert("The max number of VLANS is 30");
-        } else {
-            for (let index = 0; index < numVlans; index++) {
-                let text = document.createElement("input");
-                output.appendChild(text);
-            }
 
-        }
+    let addInterface = () => {
+        alert("Interface inserida");
+
     }
-*/
+/*         
+<select name="switchPortMode">
+                        <option value="access">Access</option>
+                        <option value="trunk">Trunk</option>
+                        <option value="dynamic">Dynamic</option>
+                    </select>*/
+
+    
 </script>
 
 </html>
