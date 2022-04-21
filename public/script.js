@@ -6,7 +6,6 @@ let vlanForm = document.createElement("form");
 vlanForm.method = "post";
 
 
-
 output.appendChild(vlanForm);
 
 let id = 0;
