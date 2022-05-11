@@ -14,6 +14,19 @@ function insertVlan() {
     let div = document.createElement("div");
     vlanForm.appendChild(div);
 
+    //Span Vlan number
+    let vlanNumber = document.createElement("span");
+    vlanNumber.textContent="Vlan number:"
+    div.appendChild(vlanNumber);
+
+    //Field Vlan Number
+    let inputVlanNumber = document.createElement("input");
+    inputVlanNumber.type= "number"
+    inputVlanNumber.style.width="50px"
+    inputVlanNumber.name = "filter1"
+    div.appendChild(inputVlanNumber);
+
+    //Field Vlan Name
     let inputVlanName = document.createElement("input");
     inputVlanName.placeholder = "Vlan name";
     inputVlanName.name = "filter";
@@ -23,6 +36,7 @@ function insertVlan() {
 
     let vlan = {
         id: id += 1,
+        vlanNumber:"",
         vlanName: "",
         interfaces: [],
     };
@@ -38,7 +52,7 @@ function insertVlan() {
     let index = id;
     btnInterface.addEventListener("click", () => addInterface(index, div));
 }
-let counter = 0;
+
 
 function addInterface(index, div) {
     console.log(index)
@@ -61,10 +75,10 @@ function addInterface(index, div) {
 
 
     let switchPortModeEl = document.createElement("select");
-    switchPortModeEl.id = "switchPortModeOption"+counter
-    switchPortModeEl.name="swMd"
+    switchPortModeEl.id = "switchPortModeOption"
+    switchPortModeEl.name = "swMd"
     div.appendChild(switchPortModeEl)
-counter ++
+
     //Option 1
     let option1 = document.createElement("option")
     option1.value = "Access";
@@ -89,21 +103,30 @@ counter ++
 
 function generateCode() {
 
-//Input em Vlan Name
+//Input em Vlan Name e Vlan Number
+
+    let vlanNumber = document.getElementsByName("filter1");
     let vlanName = document.getElementsByName("filter");
+
+    let vlanNumberArray = [];
     let vlanNameArray = [];
     for (let indexe = 0; vlanName.length > indexe; indexe++) {
-        //alert(vlanName[indexe].value)
         vlanNameArray.push(vlanName[indexe].value)
+    }
+    for (let indexe = 0; vlanNumber.length > indexe; indexe++) {
+        vlanNumberArray.push(vlanNumber[indexe].value)
     }
     let numObj = myArray.length;
     for (let i = 0; i < myArray.length; i++) {
         //console.log("numObj" + numObj);
+        let sliced1 = vlanNumberArray.slice(0, numObj);// a,b
+        myArray[i].vlanNumber = sliced1[i];
         let sliced = vlanNameArray.slice(0, numObj);// a,b
         myArray[i].vlanName = sliced[i];
     }
 
     for (let indexed = 0; numObj > indexed; indexed++) {
+        vlanNumberArray.shift();
         vlanNameArray.shift();
     }
 
@@ -128,7 +151,7 @@ function generateCode() {
         let numObj = myArray[i].interfaces.length; //2
         //console.log("numObj" + numObj);
         for (let ind = 0; numObj > ind; ind++) { //2
-            let sliced2 = switchPortModeArray.slice(0,numObj);
+            let sliced2 = switchPortModeArray.slice(0, numObj);
             let sliced = interfaceNameArray.slice(0, numObj);// a,b
             myArray[i].interfaces[ind].interfaceName = sliced[ind];
             myArray[i].interfaces[ind].portMode = sliced2[ind];
@@ -139,7 +162,39 @@ function generateCode() {
         }
     }
     console.log(myArray);
+    generateText();
 }
+
+function generateText() {
+    let divgeneratetext = document.getElementById("generateText");
+    divgeneratetext.textContent="";
+    divgeneratetext.style.display = "block";
+    myArray.forEach(element => {
+
+        let outVlanNumber = document.createElement("p");
+        outVlanNumber.textContent = "switch(config)# vlan " + element.vlanNumber
+        divgeneratetext.appendChild(outVlanNumber);
+
+        let outVlanName = document.createElement("p");
+        outVlanName.textContent = "switch(config-vlan)# name " + element.vlanName
+        divgeneratetext.appendChild(outVlanName);
+
+        element.interfaces.forEach(element => {
+            let outInterfaceName = document.createElement("p");
+            outInterfaceName.textContent = "switch(config-if)# interface " + element.interfaceName
+            divgeneratetext.appendChild(outInterfaceName);
+
+            let outSwitchPortMode = document.createElement("p");
+            outSwitchPortMode.textContent = "switch(config-if)# switchport mode " + element.portMode
+            divgeneratetext.appendChild(outSwitchPortMode);
+        })
+
+
+        console.log(element.vlanName)
+    })
+
+}
+
 
 /*let p = new Promise((resolve,reject) => {
     let a= 1+1;
