@@ -12,17 +12,18 @@ let id = 0;
 
 function insertVlan() {
     let div = document.createElement("div");
+
     vlanForm.appendChild(div);
 
     //Span Vlan number
     let vlanNumber = document.createElement("span");
-    vlanNumber.textContent="Vlan number:"
+    vlanNumber.textContent = "Vlan number:"
     div.appendChild(vlanNumber);
 
     //Field Vlan Number
     let inputVlanNumber = document.createElement("input");
-    inputVlanNumber.type= "number"
-    inputVlanNumber.style.width="50px"
+    inputVlanNumber.type = "number"
+    inputVlanNumber.style.width = "50px"
     inputVlanNumber.name = "filter1"
     div.appendChild(inputVlanNumber);
 
@@ -36,7 +37,7 @@ function insertVlan() {
 
     let vlan = {
         id: id += 1,
-        vlanNumber:"",
+        vlanNumber: "",
         vlanName: "",
         interfaces: [],
     };
@@ -47,17 +48,19 @@ function insertVlan() {
     let btnInterface = document.createElement("button");
     btnInterface.textContent = "Add interface";
     btnInterface.type = "button";
-    btnInterface.style.margin = "5px"
     div.appendChild(btnInterface);
     let index = id;
+
     btnInterface.addEventListener("click", () => addInterface(index, div));
+
 }
 
 
 function addInterface(index, div) {
-    console.log(index)
-
+    //console.log(index)
+    let val = Math.floor(1000 + Math.random() * 9000);
     let interfaceObj = {
+        id: val,
         interfaceName: "",
         portMode: "",
     };
@@ -67,17 +70,23 @@ function addInterface(index, div) {
             myArray[i].interfaces.push(interfaceObj);
         }
     }
+
+    let divInt = document.createElement("div")
+    divInt.id = val;
+    div.appendChild(divInt)
+
     let inputInterface = document.createElement("input");
     inputInterface.placeholder = "Interface name";
     inputInterface.name = "interface";
+    inputInterface.id = val;
     inputInterface.style.margin = "5px"
-    div.appendChild(inputInterface);
+    divInt.appendChild(inputInterface);
 
 
     let switchPortModeEl = document.createElement("select");
     switchPortModeEl.id = "switchPortModeOption"
     switchPortModeEl.name = "swMd"
-    div.appendChild(switchPortModeEl)
+    divInt.appendChild(switchPortModeEl)
 
     //Option 1
     let option1 = document.createElement("option")
@@ -97,8 +106,46 @@ function addInterface(index, div) {
     option3.textContent = "Dynamic";
     switchPortModeEl.appendChild(option3)
 
+
+    let btnInterfaceDelete = document.createElement("button");
+    btnInterfaceDelete.textContent = "X";
+    btnInterfaceDelete.type = "button";
+    divInt.appendChild(btnInterfaceDelete);
+    btnInterfaceDelete.addEventListener("click", () => deleteInterface(index, val));
     console.log(myArray);
-    finalArray.push(myArray);
+
+
+    //finalArray.push(myArray);
+
+    //alert(myArray[index].interfaces.indexOf())
+
+}
+
+
+function deleteInterface(index, val) {
+    var newArray = myArray[index - 1].interfaces.filter((item) => item.id !== val);
+    myArray[index - 1].interfaces.length = 0;
+    newArray.forEach(element => {
+        myArray[index - 1].interfaces.push(element)
+
+    })
+    console.log(myArray);
+    //myArray[index - 1].interfaces.push(newArray)
+    var elem = document.getElementById(val);
+    elem.parentNode.removeChild(elem);
+    return false;
+
+
+    /*
+        //console.log(newArray)
+        myArray[index - 1].interfaces.push(newArray[0])
+        for(let i = 0 ; myArray[index-1].interfaces.length>i; i++) {
+            //myArray[index - 1].interfaces.push(newArray[i])
+        }
+        //myArray[index-1].interfaces.push({newArray})
+        console.table(myArray[index-1].interfaces)
+        //console.log(newArray)
+        //console.log(myArray)*/
 }
 
 function generateCode() {
@@ -110,14 +157,23 @@ function generateCode() {
 
     let vlanNumberArray = [];
     let vlanNameArray = [];
-    for (let indexe = 0; vlanName.length > indexe; indexe++) {
-        vlanNameArray.push(vlanName[indexe].value)
-    }
+
     for (let indexe = 0; vlanNumber.length > indexe; indexe++) {
-        vlanNumberArray.push(vlanNumber[indexe].value)
+        if (vlanNumber[indexe].value == "") {
+            alert("Vlan number is empty")
+            return false;
+        } else {
+            if (vlanNumber[indexe].value <= 1 || vlanNumber[indexe].value > 1005) {
+                alert("Vlan number must be with id between 2 and 1005")
+                return false;
+            }
+            vlanNumberArray.push(vlanNumber[indexe].value)
+        }
     }
+
     let numObj = myArray.length;
-    for (let i = 0; i < myArray.length; i++) {
+
+    for (let i = 0; i < numObj; i++) {
         //console.log("numObj" + numObj);
         let sliced1 = vlanNumberArray.slice(0, numObj);// a,b
         myArray[i].vlanNumber = sliced1[i];
@@ -129,12 +185,24 @@ function generateCode() {
         vlanNumberArray.shift();
         vlanNameArray.shift();
     }
+//Vlan name em branco insere default
+    for (let indexe = 0; vlanName.length > indexe; indexe++) {
+        if (vlanName[indexe].value == "") {
+        } else {
+            vlanNameArray.push(vlanName[indexe].value)
+        }
+    }
+
+    for (let i = 0; i < numObj; i++) {
+        let sliced = vlanNameArray.slice(0, numObj);// a,b
+        myArray[i].vlanName = sliced[i];
+    }
+
 
 //Input em SwitchPortMode
     let vlanSw = document.getElementsByName("swMd");
     let switchPortModeArray = [];
     for (let indexe = 0; vlanSw.length > indexe; indexe++) {
-        //alert(vlanName[indexe].value)
         switchPortModeArray.push(vlanSw[indexe].value)
     }
     console.log(switchPortModeArray)
@@ -167,7 +235,7 @@ function generateCode() {
 
 function generateText() {
     let divgeneratetext = document.getElementById("generateText");
-    divgeneratetext.textContent="";
+    divgeneratetext.textContent = "";
     divgeneratetext.style.display = "block";
     myArray.forEach(element => {
 
@@ -175,9 +243,13 @@ function generateText() {
         outVlanNumber.textContent = "switch(config)# vlan " + element.vlanNumber
         divgeneratetext.appendChild(outVlanNumber);
 
-        let outVlanName = document.createElement("p");
-        outVlanName.textContent = "switch(config-vlan)# name " + element.vlanName
-        divgeneratetext.appendChild(outVlanName);
+        if (element.vlanName === undefined) {
+        } else {
+            let outVlanName = document.createElement("p");
+            outVlanName.textContent = "switch(config-vlan)# name " + element.vlanName
+            divgeneratetext.appendChild(outVlanName);
+        }
+
 
         element.interfaces.forEach(element => {
             let outInterfaceName = document.createElement("p");
@@ -190,7 +262,7 @@ function generateText() {
         })
 
 
-        console.log(element.vlanName)
+        //console.log(element.vlanName)
     })
 
 }
@@ -210,3 +282,19 @@ function generateText() {
   }).catch((message) => {
     console.log('this is in the catch ' + message)
   })*/
+
+
+/* VLAN0050
+ let vlanId = myArray[indexe].vlanNumber;
+
+ function padLeadingZeros(num,size) {
+     let s = num+"";
+     while (s.length < size) s = "0" + s;
+     return s;
+ }
+
+ let defaultVlan = padLeadingZeros(vlanId,4);
+
+ console.log(defaultVlan)
+ vlanNameArray.push("VLAN"+ defaultVlan)
+*/
