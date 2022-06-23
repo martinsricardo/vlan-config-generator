@@ -1,12 +1,18 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require("express");
+const app = express();
+
 app.use(express.static("public"));
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html')
-})
+app.use(express.urlencoded({ extended: false }));
 
-app.listen(port, () => {
-  console.log(`Example app listening on port http://localhost:${port}`)
-})
+//const { myArray } = require('.//script');
+
+app.get("/", (req, res) => {
+  //res.render("index");
+  res.sendFile(__dirname + "/public/index.html");
+});
+
+
+app.listen(3000, () => {
+  console.log(`Example app listening on port http://localhost:3000`);
+});

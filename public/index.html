@@ -1,34 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Vlan config generator</title>
+    <script src="FileSaver.js"></script>
 </head>
 
-<body>
-<nav style="display:flex;">
-    <img style="width:200px;" src="assets/icon.png" alt="">
-    <h2>VLAN Generator</h2>
-</nav>
-<div style="margin:10px;">
-    <div class="box1">
-        <button onclick="insertVlan()">Add Vlan</button>
-        <div id="output"></div>
-        <button id="generateCode" style="display:none" onclick="generateCode()">Generate Code</button>
+<body onload="start()">
+    <h1>Test version</h1>
+    <nav style="display:flex;">
+        <img style="width:200px;" src="assets/icon.png" alt="">
+        <h2>VLAN Generator</h2>
+    </nav>
+    <div style="margin:10px;">
+        <div class="box1">
+            <button id="insertVlan">Add Vlan</button>
+            <div id="output"></div>
+            <button id="generateCode" style="display:none" onclick="generateCode()">Generate Code</button>
+        </div>
+        <div id="generateText" style="font-family:Consolas; display:none">
+        </div>
+        
+        <button type="submit" id="downloadCode"  onclick="downloadCode()" style="display:none" />Download</button>
     </div>
-    <div id="generateText" style="font-family:Consolas; display:none">
-    </div>
-</div>
-<footer>
-</footer>
-<script src="script.js"></script>
-
+    <footer>
+    </footer>
+    <script src="script.js"></script>
 </body>
+
 </html>
 
 <style>
-    input{
-        margin:5px;
+    input {
+        margin: 5px;
     }
 </style>
